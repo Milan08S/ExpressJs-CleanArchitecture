@@ -2,13 +2,11 @@ const IUserRepository = require('../../domain/repositories/IUserRepository');
 const dbConnection = require('../database/DatabaseConnection');
 const User = require('../../domain/entities/User');
 
-// 🗄️ Repository que usa MySQL para persistencia de usuarios
 class UserRepository extends IUserRepository {
   constructor() {
     super();
   }
 
-  // 🔍 Obtener todos los usuarios
   async findAll() {
     try {
       const pool = await dbConnection.getPool();
@@ -23,7 +21,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // 🔍 Buscar usuario por ID
   async findById(id) {
     try {
       const pool = await dbConnection.getPool();
@@ -43,7 +40,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // 🔍 Buscar usuario por email
   async findByEmail(email) {
     try {
       const pool = await dbConnection.getPool();
@@ -63,7 +59,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // 🔍 Buscar usuario por username
   async findByUsername(username) {
     try {
       const pool = await dbConnection.getPool();
@@ -83,7 +78,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // ➕ Crear nuevo usuario
   async create(userData) {
     try {
       const pool = await dbConnection.getPool();
@@ -94,7 +88,7 @@ class UserRepository extends IUserRepository {
         [
           userData.username,
           userData.email,
-          userData.password, // Ya debe venir hasheado del Use Case
+          userData.password,
           userData.firstName,
           userData.lastName,
           userData.role || 'author',
@@ -102,13 +96,11 @@ class UserRepository extends IUserRepository {
         ]
       );
       
-      // Buscar el usuario recién creado
       return await this.findById(result.insertId);
       
     } catch (error) {
       console.error('❌ Error in create:', error);
       
-      // Manejar errores específicos de MySQL
       if (error.code === 'ER_DUP_ENTRY') {
         if (error.message.includes('email')) {
           throw new Error('Email already exists');
@@ -123,18 +115,15 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // ✏️ Actualizar usuario
   async update(id, userData) {
     try {
       const pool = await dbConnection.getPool();
       
-      // Verificar que el usuario existe
       const existingUser = await this.findById(id);
       if (!existingUser) {
         throw new Error('User not found');
       }
-      
-      // Construir query dinámico solo con campos que se van a actualizar
+
       const fieldsToUpdate = [];
       const values = [];
       
@@ -164,18 +153,16 @@ class UserRepository extends IUserRepository {
       }
       
       if (fieldsToUpdate.length === 0) {
-        return existingUser; // No hay nada que actualizar
+        return existingUser;
       }
       
-      // Agregar updatedAt
       fieldsToUpdate.push('updatedAt = CURRENT_TIMESTAMP');
-      values.push(id); // Para el WHERE
+      values.push(id);
       
       const query = `UPDATE users SET ${fieldsToUpdate.join(', ')} WHERE id = ?`;
       
       await pool.execute(query, values);
       
-      // Retornar usuario actualizado
       return await this.findById(id);
       
     } catch (error) {
@@ -194,12 +181,10 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // 🗑️ Eliminar usuario
   async delete(id) {
     try {
       const pool = await dbConnection.getPool();
       
-      // Verificar que el usuario existe
       const existingUser = await this.findById(id);
       if (!existingUser) {
         throw new Error('User not found');
@@ -215,7 +200,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // ✅ Verificar si existe usuario con email o username
   async exists(email, username) {
     try {
       const pool = await dbConnection.getPool();
@@ -231,7 +215,6 @@ class UserRepository extends IUserRepository {
     }
   }
 
-  // 🔄 Mapear fila de MySQL a objeto User
   mapRowToUser(row) {
     return new User({
       id: row.id,

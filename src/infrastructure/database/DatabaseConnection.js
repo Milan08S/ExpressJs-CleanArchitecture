@@ -1,14 +1,12 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-// 🗄️ Clase para manejar la conexión a MySQL
 class DatabaseConnection {
   constructor() {
     this.connection = null;
     this.pool = null;
   }
 
-  // 🔗 Crear pool de conexiones (recomendado para producción)
   async createPool() {
     if (this.pool) {
       return this.pool;
@@ -36,7 +34,6 @@ class DatabaseConnection {
     }
   }
 
-  // 🔗 Conectar a MySQL (para operaciones simples)
   async connect() {
     if (this.connection) {
       return this.connection;
@@ -59,7 +56,6 @@ class DatabaseConnection {
     }
   }
 
-  // 🧪 Probar conexión
   async testConnection() {
     try {
       const connection = await this.connect();
@@ -72,7 +68,6 @@ class DatabaseConnection {
     }
   }
 
-  // 🗄️ Obtener pool (método recomendado)
   async getPool() {
     if (!this.pool) {
       await this.createPool();
@@ -80,7 +75,6 @@ class DatabaseConnection {
     return this.pool;
   }
 
-  // 🔌 Cerrar conexiones
   async close() {
     try {
       if (this.connection) {
@@ -100,7 +94,6 @@ class DatabaseConnection {
   }
 }
 
-// 🏭 Singleton instance
 const dbConnection = new DatabaseConnection();
 
 module.exports = dbConnection;

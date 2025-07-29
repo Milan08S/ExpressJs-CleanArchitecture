@@ -1,5 +1,3 @@
-// Validation middleware
-
 const validateUserData = (req, res, next) => {
   const { username, email, password, firstName, lastName } = req.body;
   const errors = [];

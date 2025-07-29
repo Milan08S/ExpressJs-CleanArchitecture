@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// Import route factories
 const createUserRoutes = require('./userRoutes');
 
-// API Documentation endpoint
 router.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the User Management API',

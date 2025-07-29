@@ -3,11 +3,9 @@
 const errorHandler = (error, req, res, next) => {
   console.error('Error occurred:', error);
 
-  // Default error
   let statusCode = 500;
   let message = 'Internal Server Error';
 
-  // Handle specific error types
   if (error.message.includes('not found')) {
     statusCode = 404;
     message = error.message;
@@ -25,7 +23,6 @@ const errorHandler = (error, req, res, next) => {
     message = error.message;
   }
 
-  // Send error response
   res.status(statusCode).json({
     success: false,
     message,

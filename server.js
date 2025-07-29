@@ -7,7 +7,6 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 async function startServer() {
   try {
-    // 🧪 PASO 1: Probar conexión a base de datos (sin crear nada)
     console.log('🔗 Testing database connection...');
     const isConnected = await dbConnection.testConnection();
     
@@ -16,7 +15,6 @@ async function startServer() {
       process.exit(1);
     }
     
-    // 🚀 PASO 2: Iniciar servidor
     console.log('🚀 Starting Express server...');
     const app = new App().getApp();
     
@@ -28,7 +26,6 @@ async function startServer() {
       console.log(`📚 API Base: http://localhost:${PORT}/api`);
     });
 
-    // 🔌 Manejar cierre graceful del servidor
     setupGracefulShutdown(server);
     
   } catch (error) {
@@ -42,12 +39,10 @@ function setupGracefulShutdown(server) {
     console.log(`👋 ${signal} received, shutting down gracefully`);
     
     try {
-      // Cerrar servidor HTTP
       server.close(() => {
         console.log('✅ HTTP server closed');
       });
       
-      // Cerrar conexiones de base de datos
       await dbConnection.close();
       
       console.log('✅ Graceful shutdown completed');

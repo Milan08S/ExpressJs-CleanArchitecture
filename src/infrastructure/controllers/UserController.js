@@ -32,7 +32,7 @@ class UserController {
         return {
           ...userData,
           fullName: user.getFullName(), 
-          password: undefined // No exponer password
+          password: undefined
         };
       });
       

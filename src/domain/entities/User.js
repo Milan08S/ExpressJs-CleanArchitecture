@@ -3,10 +3,10 @@ class User {
     this.id = id;
     this.username = username;
     this.email = email;
-    this.password = password; // Should be hashed
+    this.password = password;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.role = role; // admin, editor, author
+    this.role = role;
     this.isActive = isActive;
     this.createdAt = createdAt || new Date();
     this.updatedAt = updatedAt || new Date();
